@@ -2,17 +2,19 @@
 using System.Linq;
 using System.IO;
 using System.Collections.Generic;
+using BenchmarkDotNet.Attributes;
+using BenchmarkDotNet.Running;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace SHA256
 {
 	public class Program
 	{
-		static void Main(string[] args)
+        private static readonly System.Security.Cryptography.SHA256 sha256 = System.Security.Cryptography.SHA256.Create();
+        private static readonly byte[] input = Encoding.ASCII.GetBytes("Hello World");
+        static void Main(string[] args)
         {
-            //Input
-            /*Console.Write("Input: ");
-            string input = Console.ReadLine();*/
-
             if (args.Length > 2)
             {
                 throw new ArgumentException("Cannot provide more than one argument");
@@ -21,7 +23,12 @@ namespace SHA256
             Console.WriteLine(SHA256(args.Length == 0 ? "" : args[0]));
             return;
 
+            //var summary = BenchmarkRunner.Run<Program>();
+
         }
+/*
+        [Benchmark]
+        public byte[] Sha256() => sha256.ComputeHash(input);*/
 
         private static void SHA256WithAnimation(string input)
         {
@@ -354,6 +361,9 @@ namespace SHA256
             Console.WriteLine($"Hash: {hash}");
         }
 
+       /* [Benchmark]
+        public string SHA256() => SHA256("Hello World");*/
+        
         public static string SHA256(string input)
         {
             int[] asciiInput = input.Select(c => Convert.ToInt32(c)).ToArray();
